@@ -15,6 +15,7 @@ related:
   - "[[Hermes Agent]]"
   - "[[Claude Code Projects]]"
   - "[[Model Context Protocol (MCP)]]"
+  - "[[Durable Execution for AI Agents]]"
 ---
 
 # 🧠 Persistent Memory Systems
@@ -59,6 +60,15 @@ flowchart TD
 | **Semantic Vector RAG** | Dense vector embeddings (Cosine) | Qdrant, Chroma, pgvector | Fast retrieval over millions of chunks | Loss of global synthesis; no explicit reasoning trails |
 | **Procedural Memory** | Skill files, MCP tool catalogs | Executable scripts, JSON Schemas | Deterministic action repeatability | Requires rigorous interface governance |
 | **Compiled Markdown Wiki** | Interlinked Markdown files (`[[LLM Wiki]]`) | Local Git repository / Obsidian vault | **Compounding insight, zero opaque state, human-in-the-loop inspectability** | Write amplification (one ingest touches 10–15 files) |
+
+---
+
+## 🛡️ Execution Checkpoints vs. Cognitive Long-Term Memory
+
+A crucial architectural distinction is between **workflow execution checkpoints** and **cognitive long-term memory**:
+
+* **Execution Checkpoints ([[Durable Execution for AI Agents]]):** Answer *"Where did this workflow stop, and what state is needed to resume it?"* Managed via graph frameworks (e.g. LangGraph with `SqliteSaver`, Temporal). Thread-scoped, deterministic, and cleared/archived once the workflow terminates. Prevents duplicated external actions (e.g., duplicate PR creation) and avoids repeating expensive model inferences after a crash.
+* **Cognitive Long-Term Memory:** Answers *"What facts, insights, or preferences should the agent retain across distinct tasks and conversations?"* Managed via vector embeddings, episodic logs, and compiled knowledge graphs (`[[LLM Wiki]]`). Cross-thread, cumulative, and persistent indefinitely.
 
 ---
 

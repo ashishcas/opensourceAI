@@ -19,6 +19,7 @@ related:
   - "[[GPT-6 Sol and Luna]]"
   - "[[SoL-Pi]]"
   - "[[Plugin4Shell]]"
+  - "[[GitHub Package Firewall]]"
   - "[[Kestra 2.0]]"
   - "[[ZCode Security]]"
   - "[[Model Context Protocol (MCP)]]"
@@ -115,22 +116,28 @@ flowchart TD
 
 ---
 
-## 3. 🛡️ Plugin4Shell: Agent Supply-Chain Security Flaw
+## 3. 🛡️ Agent Supply-Chain Defense: [[Plugin4Shell]] & [[GitHub Package Firewall]]
 
-AIR Security disclosed **Plugin4Shell**, a critical supply-chain vulnerability affecting AI plugin resolution across Claude Code, OpenAI Codex, GitHub Copilot, and Gemini CLI:
-* **The Vulnerability:** Malicious repositories manipulated Git commit pins, allowing unauthorized code to execute despite appearing pinned to a reviewed commit.
-* **Key Insight:** Agents with shell, filesystem, and CI access turn plugins and MCP servers into high-privilege software dependencies.
+The speed with which AI coding agents (`OpenCode`, `Claude Code`, `Hermes`) modify codebases and install packages has elevated dependency security to a first-class agent constraint:
+
+### A. Plugin4Shell (Commit Pinning Exploits)
+AIR Security disclosed **Plugin4Shell**, where malicious repositories manipulated Git commit pins, allowing unauthorized code to execute despite appearing pinned to a reviewed commit.
 
 ```mermaid
 flowchart LR
     Plugin["AI Plugin / Skill"] --> Attack["Commit Pin Bypass"] --> Malicious["Unreviewed Code Injected"] --> Agent["AI Agent Executes with Elevated Privileges"]
 ```
 
-> [!warning] Security Directive
-> Treat all MCP servers, external skills, and plugins as **production dependencies**:
-> * Cryptographically verify hashes and signatures.
-> * Run MCP servers in isolated sandboxes with least-privilege network egress.
-> * Do not trust marketplace labels blindly.
+### B. GitHub Package Firewall (In-Line Registry Protection)
+GitHub introduced the **Package Firewall** (public preview for GitHub Enterprise Cloud) sitting directly between CI runners / agent endpoints and upstream registries like npm:
+* **Pre/Post-Install Script Mitigation:** Intercepts malicious lifecycle scripts before they execute on developer workstations or runner environments.
+* **Cooldown Windows:** Enforces configurable waiting periods on newly published packages to let security audits detect poisoned releases.
+* **Attestation Verification:** Flags downgrade attacks where build provenance signatures have been stripped.
+
+> [!warning] Security Directive for Coding Agent Workflows
+> * Always configure coding agents to run `npm ci` with `--ignore-scripts` during initial package resolution.
+> * Lock exact package versions in `package.json` rather than permitting open ranges (`^` or `~`).
+> * Execute package manager actions inside sandboxed micro-VMs ([[Fly.io Sprites]] or [[ToolHive]]).
 
 ---
 
@@ -179,6 +186,7 @@ flowchart TD
 | **[[GPT-6 Sol and Luna]]** | Tiered cost-curve model routing ($0.10 vs $2.00) | ⭐⭐⭐⭐⭐ | [[GPT-6 Sol and Luna]] |
 | **[[Kestra 2.0]]** | Deterministic workflow engine as MCP tools | ⭐⭐⭐⭐⭐ | [[Kestra 2.0]] |
 | **[[Plugin4Shell]] Security** | Pinned dependency & MCP server supply-chain security | ⭐⭐⭐⭐⭐ | [[Plugin4Shell]] |
+| **[[GitHub Package Firewall]]** | In-line npm supply-chain firewall for CI and AI agents | ⭐⭐⭐⭐⭐ | [[GitHub Package Firewall]] |
 | **[[ZCode Security]]** | Local-first codebase indexing & data privacy | ⭐⭐⭐⭐ | [[ZCode Security]] |
 
 ---

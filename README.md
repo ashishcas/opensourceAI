@@ -54,6 +54,8 @@ flowchart TD
     subgraph DecisionPlane ["1. Decision & Routing Layer"]
         Jev["⚡ [[Jev]] (System-1 Sub-500ms Gating)"]
         Router["[[Model Routing]]"]
+        PD["⚡ [[Prefill-Decode Disaggregation]]"]
+        vLLM["[[vLLM]] (PagedAttention Engine)"]
         SolLuna["[[GPT-6 Sol and Luna]] (Tiered Economics)"]
         MiniCPM["[[MiniCPM5-2B]] (High-Throughput Local SLM)"]
         Beam["[[Reflection Beam]] (501B/23B MoE, Useful Work / Token)"]
@@ -62,6 +64,7 @@ flowchart TD
     subgraph RuntimePlane ["2. Agent Runtimes & Swarm Orchestration"]
         OpenCode["💻 [[OpenCode]] (Distributed LAN Agent: Mac mini M4 + MacBook)"]
         AgentScope["👥 [[AgentScope]] (SOP Pipelines & TeamPipeline Swarms)"]
+        Durable["🛡️ [[Durable Execution for AI Agents]] (LangGraph / Temporal)"]
         Claude["🧑‍💻 [[Claude Code Projects]] (Coordinator-Worker Git Swarms)"]
         Hermes["🐍 [[Hermes Agent]] (Peer-to-Peer Agent Messaging)"]
         Strands["🧩 [[AWS Strands Harness]] (Budgets & Lifecycle Controls)"]
@@ -70,6 +73,7 @@ flowchart TD
 
     subgraph ProtocolPlane ["3. Tool Protocols & Automation"]
         MCP["🔌 [[Model Context Protocol (MCP)]] (Universal Interface)"]
+        Agents["📜 [[AGENTS.md]] (Agent Navigation Schema)"]
         Speakeasy["🧩 [[Speakeasy OpenAPI Generator]] (OpenAPI → MCP Tools)"]
         Kestra["⚙️ [[Kestra 2.0]] (Deterministic Workflow Orchestration)"]
         Paper2Agent["📄 [[Paper2Agent]] (Automated Tool Synthesis)"]
@@ -99,6 +103,7 @@ flowchart TD
 ## 📚 Key Vault Modules & Guides
 
 ### 🗺️ Maps of Content (MOCs) & Catalogs
+* **[`AGENTS.md`](AGENTS.md):** Autonomous agent operating protocol, fast lookup workflow, and LLM Wiki constitution.
 * **[`index.md`](index.md):** The master catalog categorizing every node for deterministic routing.
 * **[`MOC - Artificial Intelligence.md`](MOC%20-%20Artificial%20Intelligence.md):** Central map of content for AI engineering, models, tools, and telemetry.
 * **[`MOC - Agentic System Design.md`](MOC%20-%20Agentic%20System%20Design.md):** Architecture patterns for multi-agent coordination, harnesses, and memory fabrics.
@@ -113,6 +118,9 @@ flowchart TD
 * **[`Synthesis - Closed Feedback Loops & Auto-Generated MCP Tools.md`](Synthesis%20-%20Closed%20Feedback%20Loops%20&%20Auto-Generated%20MCP%20Tools.md):** Closed-loop AI fuzzing and automated OpenAPI-to-MCP synthesis.
 
 ### 🛠️ Runtime & Implementation Notes
+* **[`Durable Execution for AI Agents.md`](Durable%20Execution%20for%20AI%20Agents.md):** Checkpointed crash recovery, LangGraph SQLite persistence, human approval interrupts, and idempotency.
+* **[`Prefill-Decode Disaggregation.md`](Prefill-Decode%20Disaggregation.md):** Serving architecture decoupling compute-heavy prefill from memory-bandwidth decode (vLLM, SGLang, Mooncake).
+* **[`vLLM.md`](vLLM.md):** High-throughput LLM serving engine with PagedAttention and disaggregated prefilling.
 * **[`OpenCode.md`](OpenCode.md):** Distributed client-server configuration pointing a MacBook Pro agent to a remote Mac mini M4 Ollama endpoint.
 * **[`AgentScope.md`](AgentScope.md):** Alibaba's multi-agent framework implementing industrial SOPs and autonomous Playwright test triage.
 * **[`Persistent Memory Systems.md`](Persistent%20Memory Systems.md):** Multi-tier cognitive memory architecture separating working memory from compiled Markdown graphs.

@@ -17,11 +17,14 @@ aliases:
 up: "[[Master Guide - AI & Open-Source Engineering]]"
 related:
   - "[[Jev]]"
+  - "[[Clef]]"
+  - "[[Langfuse]]"
   - "[[AWS Strands Harness]]"
   - "[[Isaac ROS 5.0]]"
   - "[[Token Meter]]"
   - "[[Proof-of-Control]]"
   - "[[Playwright]]"
+  - "[[Project - AI Test Engineer (Playwright + BDD + MCP)]]"
 ---
 
 # ⚡ Synthesis: Decision Layers, Agent Harnesses & Verifiable Execution
@@ -33,54 +36,66 @@ related:
 
 ```mermaid
 flowchart TD
-    Task(["Incoming Task / Failure"]) --> Jev["🧠 [[Jev]] (Fast Decision Layer)\n• 70–500ms Structured Triage\n• Confidence & Action Gates"]
+    Task(["Incoming Task / Playwright Failure"]) --> DecisionGate["🧠 System-1 Decision Layer\n• [[Jev]] (70–500ms Structured Triage)\n• [[Clef]] (Ollama /v1/systemone)\n• Clef-Flash (Local Mac mini M4)"]
     
-    Jev -->|Route / Plan| Harness["🧩 [[AWS Strands Harness]]\n(Lifecycle, Budgets, Retries, Memory)"]
+    DecisionGate -->|Transient Flake| Retry["🔄 Immediate Retries"]
+    DecisionGate -->|Complex Failure| DebugAgent["🧠 Local SLM / Reasoning\n(Gemma 3 12B / OpenCode)"]
+    DecisionGate -->|Architecture / Lifecycle| Harness["🧩 [[AWS Strands Harness]]\n(Lifecycle, Budgets, Retries, Memory)"]
     
     subgraph ExecutionLayer ["Execution & Tool Integration"]
         MCP["🔌 [[Model Context Protocol (MCP)]]"]
         GitT["[[Git Server]]"]
-        PWT["[[Playwright / Browser]]"]
+        PWT["[[Playwright]] Browser"]
         Isaac["🤖 [[Isaac ROS 5.0]] (Domain Skills)"]
         MCP --> GitT & PWT & Isaac
     end
     Harness --> ExecutionLayer
+    DebugAgent --> ExecutionLayer
+    Retry --> PWT
     
     subgraph Governance ["Security & Telemetry Engine"]
         PoC["🔐 [[Proof-of-Control]]\n(Action Interception + Hash-Chained Evidence)"]
         TM["💰 [[Token Meter]]\n(Context Pressure & Cost-per-Task)"]
-        ExecutionLayer --> PoC --> TM
+        LF["🔭 [[Langfuse]]\n(Topic Clustering & Evaluation Metrics)"]
+        ExecutionLayer --> PoC --> TM --> LF
     end
     
-    TM --> Outcome{"Evaluation Gate"}
+    LF --> Outcome{"Evaluation Gate"}
     Outcome -- Pass --> Verified(["✅ Verified Result"])
     Outcome -- Fail --> Triage["Fast Triage / Retry"]
-    Triage --> Jev
+    Triage --> DecisionGate
 ```
 
 ---
 
-## 1. 🧠 Jev: Separate "Decision Layer" for AI Agents
+## 1. 🧠 Fast System-1 Decision Layers: [[Jev]] & Cloudflare [[Clef]]
 
-TypeSafe AI introduced **Jev**, pioneering a new class of **"System One" models**:
-* Rather than generating verbose conversational text, it takes application state and typed questions to return structured decisions (discrete choices, scores, yes/no probabilities, and calibrated confidence levels).
+The paradigm of relying on 70B+ or frontier models for simple triage creates unacceptable latency and cost. The industry has converged on **dedicated System-1 decision models**:
+
+### A. Jev (TypeSafe AI)
 * **Latency:** Ultra-low response times between **70–500 ms**.
-* Decouples rapid tactical decisions from heavy reasoning.
+* Accepts structured application state and typed questions to output discrete choices, scores, and confidence flags.
+
+### B. Cloudflare Clef on Ollama (`/v1/systemone`)
+* Fine-tuned from **Qwen3.8-27B** (Apache 2.0) and served natively locally or via Ollama Cloud.
+* Evaluates multimodal inputs (logs, structured JSON, screenshots) and emits typed decisions in a single pass without generative text overhead.
+* **Clef-Flash:** Lightweight parameter variant tailored for Apple Silicon (Mac mini M4 unified memory).
 
 ```mermaid
 flowchart LR
     Agent["Autonomous Agent"] --> Fork{"Decision Point"}
-    Fork -->|Fast Tactical Routing (70-500ms)| Jev["🧠 [[Jev]] (System 1)\n• Route • Filter • Triage • Score"]
-    Fork -->|Deep Reasoning / Code Gen| LLM["👑 Frontier LLM (System 2)\n• Plan • Synthesize • Debug"]
+    Fork -->|Fast Tactical Routing (70-400ms)| ClefGate["⚡ [[Clef]] / [[Jev]] (System 1)\n• Ollama /v1/systemone\n• Route • Retry • Triage • Score"]
+    Fork -->|Deep Reasoning / Code Gen (2-15s)| LLM["👑 Gemma 3 12B / Frontier (System 2)\n• Investigate • Synthesize • Refactor"]
 ```
 
-> [!tip] Practical Takeaway for AI Test Engineer
-> Do not invoke a heavy reasoning model for basic triage. Prototype a Jev-style decision gate for Playwright:
+> [!tip] Practical Takeaway for [[Project - AI Test Engineer (Playwright + BDD + MCP)|AI Test Engineer]]
+> Construct a decision-model-powered triage pipeline:
 > ```text
-> Playwright Failure ──> [Jev Decision Gate] ──┬──> Retry (transient flake)
->                                              ├──> Debug Agent (code break)
->                                              └──> Escalate to Human
+> Playwright Failure ──> [Clef /v1/systemone] ──┬──> RETRY (Transient flake) ──> Rerun Playwright
+>                                               ├──> DIAGNOSE (Code/DOM break) ──> Gemma 3 12B ──> Patch ──> Langfuse
+>                                               └──> ESCALATE (System down) ──> Alert Engineer
 > ```
+> Track classification accuracy, false-retry rate, and pass rate in [[Langfuse]].
 
 ---
 

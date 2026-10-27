@@ -17,6 +17,8 @@ related:
   - "[[Plugin4Shell]]"
   - "[[LLM Wiki]]"
   - "[[Persistent Memory Systems]]"
+  - "[[mcp-scan]]"
+  - "[[Paperclip]]"
 ---
 
 # 🔌 Model Context Protocol (MCP)
@@ -82,8 +84,10 @@ if __name__ == "__main__":
 
 ---
 
-## 🛡️ Security & Supply Chain Checklist
-* Run servers inside isolated containers (e.g. [[ToolHive]]).
-* Enforce strict input validation via JSON schema.
-* Cryptographically audit server code to prevent [[Plugin4Shell]] supply-chain hijacking.
-* Record every tool invocation into [[Proof-of-Control]] verifiable audit trails.
+## 🛡️ Security, Governance & Tool Auditing
+* **Empirical Threat Exposure:** BeyondTrust (October 2026) revealed that 85% of active coding-agent users invoke at least one MCP server, averaging 4.35 servers per user.
+* **Pre-Execution Scanning:** Audit MCP servers, configurations, and skills with `[[mcp-scan]]` (`uvx mcp-scan@latest --skills`) to detect hidden prompt injections and tool poisoning before connecting.
+* **Container Sandboxing:** Run tools inside isolated micro-VM sandboxes via [[ToolHive]] or [[Fly.io Sprites]].
+* **Supply-Chain Immutability:** Pin exact git commit hashes to prevent [[Plugin4Shell]] dependency hijacking.
+* **Cryptographic Provenance:** Record every tool execution receipt using [[Proof-of-Control]] and enforce agent identities using [[Paperclip]].
+

@@ -29,28 +29,36 @@ tags:
 ---
 
 ## 🤖 Agent Frameworks & Execution Runtimes
-* [[OpenCode]]: Terminal-native coding agent supporting remote Ollama backends over LAN and MCP servers.
+* [[OpenCode]]: Terminal-native coding agent supporting remote Ollama backends over LAN and MCP servers (v1.19.3 configurable reasoning).
 * [[AgentScope]]: Multi-agent orchestration framework enforcing Standard Operating Procedures (SOPs) and TeamPipelines.
 * [[Claude Code Projects]]: Coordinator-worker multi-agent architecture with Git branch isolation and `CLAUDE.md` knowledge schemas.
 * [[Hermes Agent]]: Multi-agent peer-to-peer messaging (`hermes peer`), modular skill engines, and persistent file-backed memory.
 * [[AWS Strands Harness]]: Industrial agent SDK managing token limits, cancellation tokens, session bounds, and model fallbacks.
 * [[GitHub Taskflow Agent]]: Closed-loop fuzzing, crash triage, and automated harness refinement.
+* [[Project - AI Test Engineer (Playwright + BDD + MCP)]]: Closed-loop automated testing runtime combining Playwright MCP, Clef System-1 triage, Gemma 3 12B, and Langfuse evaluations.
+* [[Durable Execution for AI Agents]]: Fault-tolerant workflow execution, SQLite/PostgreSQL checkpointing (LangGraph/Temporal), human-in-the-loop interrupts, and idempotency key governance.
 
 ---
 
 ## 🔌 Tool Protocols & Deterministic Orchestration
 * [[Model Context Protocol (MCP)]]: Universal open standard for connecting AI agents with external tools, data sources, and execution environments.
+* [[Playwright]]: Cross-browser automation engine and MCP tool server for web agents and synthetic testing.
 * [[ToolHive]]: Containerized MCP gateway and egress network sandboxing for tool execution.
 * [[Kestra 2.0]]: Deterministic workflow orchestration engine exposing complex pipelines as MCP tools.
 * [[Speakeasy OpenAPI Generator]]: Automated type-safe SDK, CLI, and MCP server generator from OpenAPI specs.
 * [[Paper2Agent]]: Automated tool synthesis and verification against reference test suites.
 * [[Isaac ROS 5.0]]: Domain-specific agent skills for robotics and simulation pipelines.
+* [[AGENTS.md|AGENTS.md (Operating Schema)]]: Autonomous agent navigation protocol, frontmatter rules, and LLM Wiki maintenance constitution.
 
 ---
 
 ## ⚡ Inference, Decision & Routing
+* [[Prefill-Decode Disaggregation]]: Decoupled inference architecture separating compute-bound prefill from memory-bound decode via high-speed KV cache transfer (vLLM, SGLang, Mooncake).
+* [[vLLM]]: Production LLM serving engine pioneering PagedAttention virtual KV memory and disaggregated prefilling (v0.7.2+).
+* [[Clef]]: Cloudflare's specialized System-1 decision model (Qwen3.8-27B fine-tune, Apache 2.0) on Ollama `/v1/systemone` for fast action selection and test failure triage.
 * [[Jev]]: Fast, typed System-1 decision intelligence (70–500ms) for action gating and failure triage.
-* [[Model Routing]]: Dynamic cost and latency allocation across local SLMs and frontier models.
+* [[Model Routing]]: Dynamic cost and latency allocation across local SLMs, decision gates, and frontier models.
+* [[TorchNeuron]]: Open-source PyTorch backend for AWS Trainium 2 and 3 AI accelerators enabling hardware portability.
 * [[GPT-6 Sol and Luna]]: Economic model tiering ($0.10 Luna vs $2.00 Sol).
 * [[MiniCPM5-2B]]: High-performance local small language model for discrete tasks.
 * [[Reflection Beam]]: Open-weight 501B/23B MoE model focused on high-efficiency useful work per token.
@@ -59,10 +67,12 @@ tags:
 
 ## 🛡️ Security, Verification & Telemetry
 * [[Fly.io Sprites]]: Disposable micro-VM execution sandboxes separating agent credentials from command execution.
+* [[GitHub Package Firewall]]: In-line proxy defending CI runners and AI coding agents against malicious npm packages and install lifecycle scripts.
 * [[AI Gateway Security]]: Threat modeling, SSRF defenses, and CVE-2026-35029/59823 mitigation in AI routing proxies.
 * [[GitHub AI Scan]]: Contextual LLM security analysis for pull request scripts, Terraform, and Dockerfiles.
 * [[Proof-of-Control]]: Open standard for tamper-evident action interception and signed evidence trails.
 * [[Plugin4Shell]]: Critical supply-chain vulnerability mitigation in AI agent commit-pinning resolution.
+* [[Langfuse]]: Open-source AI observability and evaluation platform tracking multi-agent traces, OTel metadata, and RAG quality metrics.
 * [[Token Meter]]: Open-source local telemetry dashboard tracking cost-per-successful-task.
 * [[ZCode Security]]: Codebase privacy, local indexing, and zero-data-retention practices.
 

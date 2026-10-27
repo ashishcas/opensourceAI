@@ -17,6 +17,9 @@ related:
   - "[[Token Meter]]"
   - "[[AgentScope]]"
   - "[[Reflection Beam]]"
+  - "[[Langfuse]]"
+  - "[[mcp-scan]]"
+  - "[[LMCache]]"
 ---
 
 # 💻 OpenCode
@@ -160,3 +163,71 @@ In production engineering setups, OpenCode should be configured with a resilient
   }
 }
 ```
+
+---
+
+## ⚡ OpenCode 1.19.3: Configurable Model Reasoning & Benchmarking
+
+Released in October 2026, **OpenCode 1.19.3** introduces granular configuration over model reasoning variants while preserving user-defined explicit parameter overrides:
+
+### 1. Reasoning Variants & Override Preservation
+Different coding tasks demand distinct cognitive budgets:
+* **Trivial lookups & documentation queries** do not require heavy extended thought tokens.
+* **Complex multi-file refactors & flaky test debugging** require dedicated reasoning depth.
+* OpenCode 1.19.3 allows specifying reasoning parameters per command or profile without clobbering base provider settings:
+
+```json
+{
+  "reasoning": {
+    "effort": "high",
+    "budgetTokens": 8192,
+    "preserveOverrides": true
+  }
+}
+```
+
+### 2. Standardized Local Agent Benchmarking Harness
+When benchmarking OpenCode paired with a Mac mini M4 Ollama endpoint, evaluate performance across three baseline tasks in the same repository:
+1. **Architecture Explanation:** `opencode run "Explain this component's architecture and dependency graph"`
+2. **Bug Remediation:** `opencode run "Fix the failing unit test in tests/test_auth.py"`
+3. **Feature Synthesis & Verification:** `opencode run "Implement the rate-limiting middleware and run pytest"`
+
+> [!tip] Evaluation Criteria
+> Rather than evaluating code aesthetics alone, measure:
+> * **Completion Success:** Did the test suite actually pass without human intervention?
+> * **Retry & Loop Count:** How many turns did the agent require before converging?
+> * **Latency & Thermal Impact:** Token generation rate and memory pressure on the M4 server.
+> * **Observability Tracing:** Stream execution spans directly to [[Langfuse]] for systematic regression tracking.
+
+---
+
+## 🔭 Agent Observability: Official Langfuse OpenCode Plugin
+
+Released in late October 2026, the **Langfuse OpenCode Observability Plugin** instruments the OpenCode CLI, capturing the internal execution lifecycle rather than treating the agent as a black-box HTTP caller:
+
+```mermaid
+flowchart LR
+    OC["OpenCode CLI Engine"] --> Plugin["🔌 Langfuse Plugin"]
+    Plugin --> LF["Langfuse Dashboard (v4.70.0+)"]
+    
+    subgraph CapturedSpans ["Trace Telemetry Captured"]
+        direction TB
+        T1["User Turns & Intent"]
+        T2["Model Generation & Latency"]
+        T3["MCP Tool Calls & Outputs"]
+        T4["Reasoning Output & Overrides"]
+        T5["Context Compaction Events"]
+        T6["Retry Loops & Failures"]
+    end
+    
+    Plugin --> CapturedSpans
+```
+
+### What the Plugin Traces:
+1. **User Turns:** Prompt history, conversational branching, and session length.
+2. **Model Generations:** Exact token counts, model variants, and TTFT/generation speed.
+3. **MCP Tool Calls:** Tool invocation parameters, execution duration, and exit codes.
+4. **Reasoning Traces:** Raw thinking tokens emitted by models (e.g. DeepSeek-R1 or Qwen reasoning variants) separated from final code blocks.
+5. **Context Compaction:** Tracing when OpenCode summarizes or evicts prior turns to fit within context limits (evaluating whether crucial context was lost).
+6. **Retries & Error Convergence:** Pinpointing the exact failure step when an agent gets stuck in a loop.
+

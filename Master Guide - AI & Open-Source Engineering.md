@@ -152,13 +152,16 @@ Route tasks dynamically based on complexity, latency, privacy, and cost:
 ```mermaid
 flowchart TD
     Task[Incoming Task] --> Router{"[[Model Router]]"}
-    Router -->|Classification / Search| Local["[[Local SLM (Ollama)]]"]
+    Router -->|System-1 Triage & Gating (70-400ms)| ClefGate["⚡ [[Clef]] / [[Jev]]\n(Ollama /v1/systemone)"]
+    Router -->|Classification / Unit Tests| Local["[[Local SLM (Ollama)]] / Gemma 3 12B"]
     Router -->|Summarization / Tests| Mid["[[Medium Model]]"]
-    Router -->|Complex Reasoning| Frontier["[[Frontier LLM (Claude/GPT)]]"]
+    Router -->|Complex Reasoning & Architecture| Frontier["[[Frontier LLM (Claude/GPT)]]"]
     Router -->|Sensitive / Airgapped| Private["[[Private Local Model]]"]
 ```
 
 * **Core Optimization Metric:** **Cost per successful task** (factoring token spend, retries, latency, and tool calls).
+* **System-1 vs System-2 Splitting:** Use specialized decision models ([[Clef]], [[Jev]]) to triage flakes and route actions in sub-second timeframes, preserving high-parameter reasoning models for true anomalies.
+* **Hardware Portability:** Evaluate backends like AWS [[TorchNeuron]] alongside local Apple Silicon Metal (`mps`) to avoid vendor hardware lock-in.
 
 ---
 
@@ -175,9 +178,11 @@ flowchart TD
 ```
 
 ### 3.1 [[OpenCode]]
-- Terminal-based development environment.
-- Complete provider abstraction (GPT, Claude, Gemini, DeepSeek, Local models).
+- Terminal-based development environment for local and remote multi-model workflows.
+- Complete provider abstraction (GPT, Claude, Gemini, DeepSeek, Local models via Ollama).
 - Native [[Model Context Protocol (MCP)]] and session management.
+- **v1.19.3 Improvements:** Granular configuration of model reasoning variants with override preservation; local benchmarking harness across architecture explanation, bug remediation, and test generation.
+- **Agent Observability Plugin ([[Langfuse]]):** Native instrumentation capturing user turns, model generations, tool calls, retry loops, reasoning traces, and context compaction.
 
 ### 3.2 [[Hermes Agent]]
 - Multi-agent swarm reference architecture: `Coordinator -> Research + Coding + Test + Debug -> Evaluator`.
@@ -188,6 +193,10 @@ flowchart TD
 
 ### 3.4 [[Goose]]
 - Model-agnostic desktop/terminal automation emphasizing local tool calling and MCP integrations.
+
+### 3.5 [[Paperclip]]
+- Open-source control plane for multi-agent teams separating agent execution from orchestration.
+- Capabilities: Persistent cryptographic identities, private scoped tasks, and MCP-governed task workflows.
 
 ---
 
@@ -498,6 +507,7 @@ ai-test-engineer/
 ### ◀️ Related Technologies
 - [[Hermes Agent]] • [[ToolHive]] • [[Model Context Protocol (MCP)]] • [[Paper2Agent]]
 - [[OpenCode]] • [[OpenHands]] • [[Goose]] • [[Ollama]] • [[vLLM]] • [[SGLang]] • [[Playwright]]
+- [[Clef]] • [[Jev]] • [[Langfuse]] • [[TorchNeuron]] • [[GitHub Package Firewall]]
 
 ### 🔽 Applied Blueprints & Projects
 - [[Project - AI Test Engineer (Playwright + BDD + MCP)]]
